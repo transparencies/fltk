@@ -164,8 +164,9 @@ protected:
   const char *name_;
   /** Label text of a widget. */
   const char *label_;
-  /** If it is just a word, it's the name of the callback function. Otherwise
-   it is the full callback C++ code. Can be nullptr. */
+  /** If it is just a word, it's the name of the callback function. If it starts
+   with a '[', it's a lambda function. Otherwise it is the full callback
+   C++ code. Can be nullptr. */
   const char *callback_;
   /** Widget user data field as C++ text. */
   std::string user_data_;

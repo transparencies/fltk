@@ -1927,7 +1927,7 @@ void Widget_Node::write_widget_code(fld::io::Code_Writer& f) {
   std::string ud = user_data();
   if (class_name(1) && !parent->is_widget()) ud = "this";
   if (callback()) {
-    if (callback()[0] == '[') {
+    if (callback()[0] == '[') { // lambda callback function
       f.write_c("%s%s->callback(\n", f.indent(), var);
       f.tag(Mergeback::Tag::GENERIC, Mergeback::Tag::WIDGET_CALLBACK, 0);
       f.write_c_indented(callback(), 1, 0);
