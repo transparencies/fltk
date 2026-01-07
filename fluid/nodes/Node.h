@@ -168,7 +168,7 @@ protected:
    it is the full callback C++ code. Can be nullptr. */
   const char *callback_;
   /** Widget user data field as C++ text. */
-  const char *user_data_;
+  std::string user_data_;
   /** Widget user data type as C++ text, usually `void*` or `long`. */
   std::string user_data_type_;
   /** Optional comment for every node in the graph. Visible in browser and
@@ -234,8 +234,8 @@ public:
   void label(const char *);
   const char *callback() const {return callback_;}
   void callback(const char *);
-  const char *user_data() const {return user_data_;}
-  void user_data(const char *);
+  std::string user_data() const { return user_data_; }
+  void user_data(const std::string&);
   std::string user_data_type() const { return user_data_type_; }
   std::string user_data_type_or_voidp() const { return user_data_type_.empty() ? "void*" : user_data_type_; }
   void user_data_type(const std::string&);

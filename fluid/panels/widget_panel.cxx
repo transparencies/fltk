@@ -2396,19 +2396,23 @@ Fl_Group *wp_cpp_callback=(Fl_Group *)0;
 static void cb_13(Fl_Input* o, void* v) {
 //ﬂ ▼ ---------------------- callback -~~=~-~----==~-=~~=~-= ▼ ﬂ//
   if (v == LOAD) {
-    o->value(current_widget->user_data());
+    o->value(current_widget->user_data().c_str());
   } else {
     int mod = 0;
     const char *c = o->value();
     const char *d = c_check(c);
-    if (d) {fl_message("Error in user_data: %s",d); haderror = 1; return;}
+    if (d) {
+      fl_message("Error in user_data: %s",d);
+      haderror = 1;
+      return;
+    }
     for (Node *n: Fluid.proj.tree.all_selected_nodes()) {
       n->user_data(c);
       mod = 1;
     }
     if (mod) Fluid.proj.set_modflag(1);
   }
-//ﬂ ▲ ----------=~-=-~--~--=----------~-~=-~=~-~~---=-~~-~-- ▲ ﬂ//
+//ﬂ ▲ ----------=~-=-~--~--=-----------~=--~~~~=~-=~-~=-~==~ ▲ ﬂ//
 }
 
 static void cb_When(Fl_Menu_Button* o, void* v) {

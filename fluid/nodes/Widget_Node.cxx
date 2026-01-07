@@ -1924,7 +1924,7 @@ void Widget_Node::write_widget_code(fld::io::Code_Writer& f) {
     if (s != fs) f.write_c("%s%s->textsize(%d);\n", f.indent(), var, s);
     if (c != fc) write_color(f, "textcolor", c);
   }}
-  const char* ud = user_data();
+  std::string ud = user_data();
   if (class_name(1) && !parent->is_widget()) ud = "this";
   if (callback()) {
     if (callback()[0] == '[') {
@@ -1937,12 +1937,12 @@ void Widget_Node::write_widget_code(fld::io::Code_Writer& f) {
     } else {
       f.write_c("%s%s->callback((Fl_Callback*)%s", f.indent(), var, callback_name(f));
     }
-    if (ud)
-      f.write_c(", (void*)(%s));\n", ud);
+    if (!ud.empty())
+      f.write_c(", (void*)(%s));\n", ud.c_str());
     else
       f.write_c(");\n");
-  } else if (ud) {
-    f.write_c("%s%s->user_data((void*)(%s));\n", f.indent(), var, ud);
+  } else if (!ud.empty()) {
+    f.write_c("%s%s->user_data((void*)(%s));\n", f.indent(), var, ud.c_str());
   }
   if (o->align() != tplate->align() || !subclass().empty()) {
     int i = o->align();

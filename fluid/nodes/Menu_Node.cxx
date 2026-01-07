@@ -464,8 +464,10 @@ int Menu_Item_Node::flags() {
   if (!o->active()) i |= FL_MENU_INACTIVE;
   if (!o->visible()) i |= FL_MENU_INVISIBLE;
   if (can_have_children()) {
-    if (user_data() == nullptr) i |= FL_SUBMENU;
-    else i |= FL_SUBMENU_POINTER;
+    if (user_data().empty())
+      i |= FL_SUBMENU;
+    else
+      i |= FL_SUBMENU_POINTER;
   }
   if (hotspot()) i |= FL_MENU_DIVIDER;
   if (menu_headline()) i |= FL_MENU_HEADLINE;
@@ -538,8 +540,8 @@ void Menu_Item_Node::write_item(fld::io::Code_Writer& f) {
     }
   } else
     f.write_c(" 0,");
-  if (user_data())
-    f.write_c(" (void*)(%s),", user_data());
+  if (!user_data().empty())
+    f.write_c(" (void*)(%s),", user_data().c_str());
   else
     f.write_c(" 0,");
   f.write_c(" %d, (uchar)%s, %d, %d, %d", flags(),
