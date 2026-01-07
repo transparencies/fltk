@@ -170,7 +170,7 @@ protected:
   /** Widget user data field as C++ text. */
   const char *user_data_;
   /** Widget user data type as C++ text, usually `void*` or `long`. */
-  const char *user_data_type_;
+  std::string user_data_type_;
   /** Optional comment for every node in the graph. Visible in browser and
    panels, and will also be copied to the source code. */
   const char *comment_;
@@ -236,8 +236,9 @@ public:
   void callback(const char *);
   const char *user_data() const {return user_data_;}
   void user_data(const char *);
-  const char *user_data_type() const {return user_data_type_;}
-  void user_data_type(const char *);
+  std::string user_data_type() const { return user_data_type_; }
+  std::string user_data_type_or_voidp() const { return user_data_type_.empty() ? "void*" : user_data_type_; }
+  void user_data_type(const std::string&);
   const char *comment() { return comment_; }
   void comment(const char *);
 

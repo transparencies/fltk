@@ -513,7 +513,6 @@ Node::Node() :
   label_(nullptr),
   callback_(nullptr),
   user_data_(nullptr),
-  user_data_type_(nullptr),
   comment_(nullptr),
   uid_(0),
   parent(nullptr),
@@ -557,7 +556,6 @@ Node::~Node() {
   if (label_) free((void*)label_);
   if (callback_) free((void*)callback_);
   if (user_data_) free((void*)user_data_);
-  if (user_data_type_) free((void*)user_data_type_);
   if (comment_) free((void*)comment_);
 }
 
@@ -852,8 +850,8 @@ void Node::user_data(const char *n) {
   storestring(n,user_data_);
 }
 
-void Node::user_data_type(const char *n) {
-  storestring(n,user_data_type_);
+void Node::user_data_type(const std::string& n) {
+  storestring(n, user_data_type_);
 }
 
 void Node::comment(const char *n) {
@@ -943,7 +941,7 @@ void Node::write_properties(fld::io::Project_Writer &f) {
     f.write_word("user_data");
     f.write_word(user_data());
   }
-  if (user_data_type()) {
+  if (!user_data_type().empty()) {
     f.write_word("user_data_type");
     f.write_word(user_data_type());
   }

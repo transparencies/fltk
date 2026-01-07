@@ -1528,8 +1528,10 @@ void Widget_Node::write_static(fld::io::Code_Writer& f) {
         write_extern_declaration = 0;
     }
     if (write_extern_declaration)
-      f.write_h_once("extern void %s(%s*, %s);", callback(), t.c_str(),
-                    user_data_type() ? user_data_type() : "void*");
+      f.write_h_once("extern void %s(%s*, %s);",
+                     callback(),
+                     t.c_str(),
+                     user_data_type_or_voidp().c_str());
   }
   const char* k = class_name(1);
   const char* c = array_name(this);
@@ -1558,8 +1560,8 @@ void Widget_Node::write_static(fld::io::Code_Writer& f) {
       f.write_c("\nstatic void %s(%s*", cn, t.c_str());
     }
     if (use_o) f.write_c(" o");
-    const char* ut = user_data_type() ? user_data_type() : "void*";
-    f.write_c(", %s", ut);
+    std::string ut = user_data_type_or_voidp();
+    f.write_c(", %s", ut.c_str());
     if (use_v) f.write_c(" v");
     f.write_c(") {\n");
     f.tag(Mergeback::Tag::GENERIC, Mergeback::Tag::WIDGET_CALLBACK, 0);
@@ -1576,7 +1578,7 @@ void Widget_Node::write_static(fld::io::Code_Writer& f) {
     f.tag(Mergeback::Tag::WIDGET_CALLBACK, Mergeback::Tag::GENERIC, get_uid());
     f.write_c("}\n");
     if (k) {
-      f.write_c("void %s::%s(%s* o, %s v) {\n", k, cn, t.c_str(), ut);
+      f.write_c("void %s::%s(%s* o, %s v) {\n", k, cn, t.c_str(), ut.c_str());
       f.write_c("%s((%s*)(o", f.indent(1), k);
       Node* q = nullptr;
       for (Node* p = parent; p && p->is_widget(); q = p, p = p->parent)
@@ -1607,10 +1609,10 @@ void Widget_Node::write_code1(fld::io::Code_Writer& f) {
   }
   if (class_name(1) && callback() && !is_name(callback())) {
     const char* cn = callback_name(f);
-    const char* ut = user_data_type() ? user_data_type() : "void*";
+    std::string ut = user_data_type_or_voidp();
     f.write_public(0);
-    f.write_h("%sinline void %s_i(%s*, %s);\n", f.indent(1), cn, t.c_str(), ut);
-    f.write_h("%sstatic void %s(%s*, %s);\n", f.indent(1), cn, t.c_str(), ut);
+    f.write_h("%sinline void %s_i(%s*, %s);\n", f.indent(1), cn, t.c_str(), ut.c_str());
+    f.write_h("%sstatic void %s(%s*, %s);\n", f.indent(1), cn, t.c_str(), ut.c_str());
   }
   // figure out if local variable will be used (prevent compiler warnings):
   int wused = !name() && is_a(Type::Window);
