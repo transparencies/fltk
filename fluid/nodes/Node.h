@@ -306,7 +306,7 @@ public:
   /** Check if this Type is of the give type Type or derived from that type Type. */
   virtual bool is_a(Type inType) const { return (inType==Type::Base_); }
 
-  const char* class_name(const int need_nest) const;
+  const char* class_name(int need_nest) const;
   bool is_in_class() const;
 
   int has_function(const char*, const char*) const;

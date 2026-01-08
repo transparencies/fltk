@@ -1220,7 +1220,7 @@ const char *Node::callback_name(fld::io::Code_Writer& f) {
  \return the name of the enclosing class, or names of the enclosing classes
  in a static buffe (don't call free), or nullptr if this Type is not inside a class
  */
-const char* Node::class_name(const int need_nest) const {
+const char* Node::class_name(int need_nest) const {
   Node* p = parent;
   while (p) {
     if (p->is_class()) {
