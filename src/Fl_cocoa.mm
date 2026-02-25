@@ -1809,7 +1809,9 @@ void Fl_Cocoa_Screen_Driver::open_display_platform() {
     FLAppDelegate *delegate = [FLAppDelegate alloc];
     [(NSApplication*)NSApp setDelegate:[delegate init]];
     if (need_new_nsapp) {
-      if (fl_mac_os_version >= 101300 && (fl_mac_os_version < 140000 || ![NSApp isRunning]) && is_bundled()) {
+      if (fl_mac_os_version >= 101300 && (fl_mac_os_version < 140000 ||
+            (![NSApp isRunning] && ((FLAppDelegate*)[NSApp delegate])->open_cb)) &&
+          is_bundled()) {
         [NSApp activateIgnoringOtherApps:YES];
         in_nsapp_run = true;
         [NSApp run];
