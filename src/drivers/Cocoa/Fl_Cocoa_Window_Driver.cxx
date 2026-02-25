@@ -72,9 +72,8 @@ void Fl_Cocoa_Window_Driver::flush_overlay()
 
 void Fl_Cocoa_Window_Driver::draw_begin()
 {
-  if (!Fl_Surface_Device::surface()->driver()->has_feature(Fl_Graphics_Driver::NATIVE)) return;
-  CGContextRef my_gc = (CGContextRef)Fl_Surface_Device::surface()->driver()->gc();
-  if (shape_data_) {
+  if (shape_data_ && Fl_Surface_Device::surface()->driver()->has_feature(Fl_Graphics_Driver::NATIVE)) {
+    CGContextRef my_gc = (CGContextRef)Fl_Surface_Device::surface()->driver()->gc();
     if (shape_data_->mask) {
       CGContextClipToMask(my_gc, CGRectMake(0,0,w(),h()), shape_data_->mask); // requires Mac OS 10.4
     }
@@ -85,9 +84,9 @@ void Fl_Cocoa_Window_Driver::draw_begin()
 
 void Fl_Cocoa_Window_Driver::draw_end()
 {
-  if (Fl_Surface_Device::surface()->driver()->has_feature(Fl_Graphics_Driver::NATIVE)) {
+  if (shape_data_ && Fl_Surface_Device::surface()->driver()->has_feature(Fl_Graphics_Driver::NATIVE)) {
     CGContextRef my_gc = (CGContextRef)Fl_Surface_Device::surface()->driver()->gc();
-    if (shape_data_) CGContextRestoreGState(my_gc);
+    CGContextRestoreGState(my_gc);
   }
 }
 

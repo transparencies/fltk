@@ -43,12 +43,6 @@ char Fl_Quartz_Graphics_Driver::can_do_alpha_blending() {
   return 1;
 }
 
-static void bmProviderRelease (void *src, const void *data, size_t size) {
-  CFIndex count = CFGetRetainCount(src);
-  CFRelease(src);
-  if(count == 1) free((void*)data);
-}
-
 /* Reference to the current CGContext
  For back-compatibility only. The preferred procedure to get this reference is
  Fl_Surface_Device::surface()->driver()->gc().
