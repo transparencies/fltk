@@ -1716,19 +1716,12 @@ static void drain_dropped_files_list() {
   free(fname);
 }
 
-static BOOL need_new_nsapp = NO;
-
 /*
  * Install an open documents event handler...
  */
 void Fl_Darwin_System_Driver::open_callback(void (*cb)(const char *)) {
-  if (!NSApp) {
-    need_new_nsapp = YES;
-    [NSApplication sharedApplication];
-  }
-  FLAppDelegate *delegate = [FLAppDelegate alloc];
-  [NSApp setDelegate:[delegate init]];
-  delegate->open_cb = cb;
+  fl_open_display();
+  ((FLAppDelegate*)[NSApp delegate])->open_cb = cb;
 }
 
 @implementation FLApplication
@@ -1809,21 +1802,14 @@ void Fl_Cocoa_Screen_Driver::open_display_platform() {
   if ( !beenHereDoneThat ) {
     beenHereDoneThat = 1;
 
-    if (!NSApp) {
-      need_new_nsapp = YES;
-      [NSApplication sharedApplication];
-    }
+    BOOL need_new_nsapp = (NSApp == nil);
+    if (need_new_nsapp) [NSApplication sharedApplication];
     NSAutoreleasePool *localPool;
     localPool = [[NSAutoreleasePool alloc] init]; // never released
-    FLAppDelegate *delegate = [NSApp delegate];
-    if (!delegate) {
-      delegate = [FLAppDelegate alloc];
-      [(NSApplication*)NSApp setDelegate:[delegate init]];
-    }
+    FLAppDelegate *delegate = [FLAppDelegate alloc];
+    [(NSApplication*)NSApp setDelegate:[delegate init]];
     if (need_new_nsapp) {
-      if (fl_mac_os_version >= 101300 &&
-          (fl_mac_os_version < 140000 || (![NSApp isRunning] && delegate->open_cb)) &&
-          is_bundled()) {
+      if (fl_mac_os_version >= 101300 && fl_mac_os_version < 140000 && is_bundled()) {
         [NSApp activateIgnoringOtherApps:YES];
         in_nsapp_run = true;
         [NSApp run];
