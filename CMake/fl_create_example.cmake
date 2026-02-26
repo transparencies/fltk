@@ -102,6 +102,9 @@ function(fl_create_example NAME SOURCES LIBRARIES)
 
   if(MAC_BUNDLE)
     add_executable        (${TARGET_NAME} MACOSX_BUNDLE ${srcs} ${ICON_PATH})
+    # add ad-hoc signature
+    add_custom_command    (TARGET ${TARGET_NAME} POST_BUILD COMMAND
+      codesign -s - ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${TARGET_NAME}.app)
   else()
     add_executable        (${TARGET_NAME} WIN32 ${srcs})
   endif(MAC_BUNDLE)
