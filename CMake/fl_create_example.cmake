@@ -102,9 +102,6 @@ function(fl_create_example NAME SOURCES LIBRARIES)
 
   if(MAC_BUNDLE)
     add_executable        (${TARGET_NAME} MACOSX_BUNDLE ${srcs} ${ICON_PATH})
-    # add ad-hoc signature
-    add_custom_command    (TARGET ${TARGET_NAME} POST_BUILD COMMAND
-      codesign -s - $<TARGET_BUNDLE_DIR:${TARGET_NAME}>)
   else()
     add_executable        (${TARGET_NAME} WIN32 ${srcs})
   endif(MAC_BUNDLE)
@@ -145,6 +142,7 @@ function(fl_create_example NAME SOURCES LIBRARIES)
 
   ##############################################################################
   # Copy macOS "bundle wrapper" (shell script) to target directory.
+  # Add ad-hoc signature.
   # The "custom command" will be executed "POST_BUILD".
   ##############################################################################
 
@@ -155,6 +153,7 @@ function(fl_create_example NAME SOURCES LIBRARIES)
       TARGET ${TARGET_NAME} POST_BUILD
       COMMAND cp ${FLTK_SOURCE_DIR}/CMake/macOS-bundle-wrapper.in ${WRAPPER}
       COMMAND chmod u+x,g+x,o+x ${WRAPPER}
+      COMMAND codesign -s - $<TARGET_BUNDLE_DIR:${TARGET_NAME}>
       BYPRODUCTS ${WRAPPER}
       # COMMENT "Creating macOS bundle wrapper script ${WRAPPER}"
       VERBATIM
